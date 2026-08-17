@@ -1,0 +1,70 @@
+<svg viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="rd-title rd-desc">
+  <title id="rd-title">Petitions routed to three different offices</title>
+  <desc id="rd-desc">Flat illustration of a single document splitting into three paths toward a district collector's office, a state ministry building, and a national ministry building, showing that different demands need different offices.</desc>
+  <rect width="900" height="460" fill="none"/>
+
+  <g transform="translate(90,170)">
+    <rect x="0" y="0" width="150" height="110" rx="4" fill="#fbf7ed" stroke="#ffb51b" stroke-width="2"/>
+    <rect x="16" y="20" width="90" height="8" rx="2" fill="#a93322"/>
+    <rect x="16" y="40" width="118" height="5" rx="2" fill="#c9b98d"/>
+    <rect x="16" y="52" width="118" height="5" rx="2" fill="#c9b98d"/>
+    <rect x="16" y="64" width="80" height="5" rx="2" fill="#c9b98d"/>
+    <circle cx="118" cy="88" r="14" fill="none" stroke="#a93322" stroke-width="2.5"/>
+    <path d="M111 88 L116 94 L126 81" fill="none" stroke="#a93322" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <g fill="none" stroke="#ffd865" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round">
+    <path d="M240 210 Q 340 90 460 70"/>
+    <path d="M240 225 Q 380 225 500 225"/>
+    <path d="M240 245 Q 340 370 460 385"/>
+  </g>
+
+  <g transform="translate(470,20)">
+    <rect x="0" y="70" width="150" height="90" fill="#fbf7ed" stroke="#fffaf0" stroke-width="0"/>
+    <polygon points="0,70 75,20 150,70" fill="#3a8c48"/>
+    <rect x="0" y="70" width="150" height="90" fill="#4a9c56"/>
+    <rect x="14" y="90" width="20" height="70" fill="#2f7b3d"/>
+    <rect x="44" y="90" width="20" height="70" fill="#2f7b3d"/>
+    <rect x="86" y="90" width="20" height="70" fill="#2f7b3d"/>
+    <rect x="116" y="90" width="20" height="70" fill="#2f7b3d"/>
+    <rect x="60" y="120" width="30" height="40" fill="#2f7b3d"/>
+    <rect x="-14" y="160" width="178" height="10" fill="#2f7b3d"/>
+  </g>
+  <g transform="translate(470,168)" text-anchor="middle">
+    <rect x="-8" y="0" width="166" height="46" rx="6" fill="#0f5432"/>
+    <text x="75" y="19" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#ffd865">DISTRICT COLLECTOR</text>
+    <text x="75" y="35" font-family="Arial,sans-serif" font-size="10" fill="#bdd0c1">Fast administrative fixes</text>
+  </g>
+
+  <g transform="translate(370,255)">
+    <rect x="0" y="60" width="130" height="80" fill="#4a9c56"/>
+    <polygon points="0,60 65,25 130,60" fill="#3a8c48"/>
+    <rect x="10" y="76" width="16" height="64" fill="#2f7b3d"/>
+    <rect x="34" y="76" width="16" height="64" fill="#2f7b3d"/>
+    <rect x="80" y="76" width="16" height="64" fill="#2f7b3d"/>
+    <rect x="104" y="76" width="16" height="64" fill="#2f7b3d"/>
+    <rect x="52" y="100" width="26" height="40" fill="#2f7b3d"/>
+    <rect x="-10" y="140" width="150" height="8" fill="#2f7b3d"/>
+  </g>
+  <g transform="translate(370,388)" text-anchor="middle">
+    <rect x="-10" y="0" width="150" height="46" rx="6" fill="#0f5432"/>
+    <text x="65" y="19" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#ffd865">STATE MINISTRY</text>
+    <text x="65" y="35" font-family="Arial,sans-serif" font-size="10" fill="#bdd0c1">Season price + MIS approval</text>
+  </g>
+
+  <g transform="translate(700,60)">
+    <rect x="0" y="80" width="150" height="90" fill="#4a9c56"/>
+    <polygon points="0,80 75,32 150,80" fill="#3a8c48"/>
+    <rect x="14" y="98" width="20" height="72" fill="#2f7b3d"/>
+    <rect x="44" y="98" width="20" height="72" fill="#2f7b3d"/>
+    <rect x="86" y="98" width="20" height="72" fill="#2f7b3d"/>
+    <rect x="116" y="98" width="20" height="72" fill="#2f7b3d"/>
+    <rect x="60" y="128" width="30" height="42" fill="#2f7b3d"/>
+    <rect x="-14" y="170" width="178" height="10" fill="#2f7b3d"/>
+  </g>
+  <g transform="translate(700,178)" text-anchor="middle">
+    <rect x="-8" y="0" width="166" height="46" rx="6" fill="#0f5432"/>
+    <text x="75" y="19" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#ffd865">UNION MINISTRY</text>
+    <text x="75" y="35" font-family="Arial,sans-serif" font-size="10" fill="#bdd0c1">Structural price protection</text>
+  </g>
+</svg>

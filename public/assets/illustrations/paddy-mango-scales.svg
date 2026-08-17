@@ -1,0 +1,79 @@
+<svg viewBox="0 0 900 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="pm-title pm-desc">
+  <title id="pm-title">Two support systems compared</title>
+  <desc id="pm-desc">Flat illustration split in two: a paddy field on the left with a steady price tag and a full grain sack beside a permanent purchase counter, and a mango orchard on the right with a question-mark price tag and an empty collection counter.</desc>
+
+  <rect x="0" y="0" width="440" height="400" fill="#dff1dd"/>
+  <rect x="460" y="0" width="440" height="400" fill="#ffe9c2"/>
+
+  <g transform="translate(30,260)">
+    <g stroke="#195b29" stroke-width="3">
+      <path d="M0 100 L8 60"/><path d="M20 100 L28 55"/><path d="M40 100 L48 60"/>
+      <path d="M60 100 L68 55"/><path d="M80 100 L88 60"/><path d="M100 100 L108 55"/>
+      <path d="M120 100 L128 60"/><path d="M140 100 L148 55"/><path d="M160 100 L168 60"/>
+      <path d="M180 100 L188 55"/><path d="M200 100 L208 60"/><path d="M220 100 L228 55"/>
+      <path d="M240 100 L248 60"/><path d="M260 100 L268 55"/><path d="M280 100 L288 60"/>
+      <path d="M300 100 L308 55"/><path d="M320 100 L328 60"/><path d="M340 100 L348 55"/>
+    </g>
+    <rect x="-6" y="97" width="366" height="7" fill="#195b29"/>
+  </g>
+
+  <g transform="translate(90,140)">
+    <rect x="0" y="0" width="110" height="90" rx="6" fill="#fbf7ed" stroke="#195b29" stroke-width="3"/>
+    <path d="M55 -34 L110 0 L0 0 Z" fill="#195b29"/>
+    <circle cx="55" cy="30" r="17" fill="none" stroke="#195b29" stroke-width="3"/>
+    <text x="55" y="37" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="18" fill="#195b29">₹</text>
+    <rect x="18" y="58" width="74" height="7" rx="2" fill="#a8cfa2"/>
+    <rect x="30" y="72" width="50" height="7" rx="2" fill="#a8cfa2"/>
+  </g>
+  <g transform="translate(255,150)" text-anchor="middle">
+    <rect x="-70" y="0" width="140" height="66" rx="6" fill="#195b29"/>
+    <text x="0" y="24" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#dff1dd">STANDING MSP</text>
+    <text x="0" y="42" font-family="Arial,sans-serif" font-size="10" fill="#bcdcb6">Price known before</text>
+    <text x="0" y="55" font-family="Arial,sans-serif" font-size="10" fill="#bcdcb6">sowing begins</text>
+  </g>
+
+  <g transform="translate(160,255)">
+    <path d="M-70 0 L70 0 L55 60 L-55 60 Z" fill="#e8dcc0" stroke="#195b29" stroke-width="2.5"/>
+    <path d="M-55 15 L55 15" stroke="#195b29" stroke-width="1.5" opacity=".5"/>
+    <path d="M-50 30 L50 30" stroke="#195b29" stroke-width="1.5" opacity=".5"/>
+    <circle cx="0" cy="-14" r="15" fill="#195b29"/>
+    <path d="M-8 -14 L8 -14 M0 -22 L0 -6" stroke="#dff1dd" stroke-width="2.5"/>
+  </g>
+  <text x="220" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#195b29">TNCSC PURCHASE CENTRE</text>
+
+  <g transform="translate(555,255)">
+    <rect x="0" y="0" width="16" height="130" fill="#5a3a22"/>
+    <ellipse cx="8" cy="-30" rx="105" ry="82" fill="#2f7b3d"/>
+    <ellipse cx="-45" cy="0" rx="65" ry="52" fill="#3a8c48"/>
+    <ellipse cx="60" cy="5" rx="68" ry="54" fill="#3a8c48"/>
+    <g fill="#ffb51b" stroke="#c98a10" stroke-width="1.4">
+      <ellipse cx="-55" cy="-20" rx="10" ry="13"/>
+      <ellipse cx="-20" cy="10" rx="10" ry="13"/>
+      <ellipse cx="20" cy="-25" rx="10" ry="13"/>
+      <ellipse cx="55" cy="10" rx="10" ry="13"/>
+      <ellipse cx="0" cy="-55" rx="10" ry="13"/>
+    </g>
+  </g>
+
+  <g transform="translate(680,140)">
+    <rect x="0" y="0" width="110" height="90" rx="6" fill="#fbf7ed" stroke="#a93322" stroke-width="3" stroke-dasharray="6 5"/>
+    <path d="M55 -34 L110 0 L0 0 Z" fill="#a93322"/>
+    <circle cx="55" cy="30" r="17" fill="none" stroke="#a93322" stroke-width="3"/>
+    <text x="55" y="38" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="20" fill="#a93322">?</text>
+    <rect x="18" y="58" width="74" height="7" rx="2" fill="#f0c48f"/>
+    <rect x="30" y="72" width="50" height="7" rx="2" fill="#f0c48f"/>
+  </g>
+  <g transform="translate(835,150)" text-anchor="middle">
+    <rect x="-70" y="0" width="140" height="66" rx="6" fill="#a93322"/>
+    <text x="0" y="24" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#ffe9c2">NO STANDING MSP</text>
+    <text x="0" y="42" font-family="Arial,sans-serif" font-size="10" fill="#f4c9ab">Price approved after</text>
+    <text x="0" y="55" font-family="Arial,sans-serif" font-size="10" fill="#f4c9ab">harvest has begun</text>
+  </g>
+
+  <g transform="translate(760,255)">
+    <path d="M-70 0 L70 0 L55 60 L-55 60 Z" fill="none" stroke="#a93322" stroke-width="2.5" stroke-dasharray="6 5"/>
+    <circle cx="0" cy="-14" r="15" fill="none" stroke="#a93322" stroke-width="2.5" stroke-dasharray="4 4"/>
+    <text x="0" y="-9" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="15" fill="#a93322">?</text>
+  </g>
+  <text x="820" y="375" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="12" fill="#a93322">NO EQUIVALENT CENTRE</text>
+</svg>
