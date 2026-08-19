@@ -14,7 +14,7 @@ import { useEffect, useRef, useState } from "react";
  *    top of a page that already works without it.
  */
 
-export const BUILD = "2026-08-17-motion-4";
+export const BUILD = "2026-08-18-mysql-9docs";
 
 type Group = { selector: string; stagger?: number; variant?: "up" | "left" | "right" | "scale" };
 

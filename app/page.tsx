@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Cartoon, CartoonName } from "./cartoons";
 import { HeroPulse, LikeBar, MythsSection, PulseTicker, ShareKit, VotingBox, useMovementPulse } from "./engage";
 import { BackToTop, MotionProvider, ScrollProgress } from "./motion";
@@ -46,11 +46,6 @@ const ui = {
     copied: "Link copied",
     download: "Download",
     open: "Read PDF",
-    demoOnly: "Demo only — no information is sent or stored.",
-    formTitle: "Put an experience on the record",
-    formBody: "A real launch can collect verified testimony with consent, moderation and secure storage. This form demonstrates the flow only.",
-    submit: "Preview submission",
-    success: "Demo received on this screen only. A secure backend is required before collecting real testimony.",
     footer: "Peaceful · Non-partisan · Evidence-led",
   },
   ta: {
@@ -84,11 +79,6 @@ const ui = {
     copied: "இணைப்பு நகலெடுக்கப்பட்டது",
     download: "பதிவிறக்க",
     open: "ஆவணத்தைப் படிக்க",
-    demoOnly: "மாதிரி மட்டும் — தகவல் அனுப்பப்படாது அல்லது சேமிக்கப்படாது.",
-    formTitle: "உண்மையான அனுபவத்தைப் பதிவு செய்யுங்கள்",
-    formBody: "உண்மையான வெளியீட்டில் ஒப்புதல், மதிப்பாய்வு மற்றும் பாதுகாப்பான சேமிப்புடன் சாட்சியங்களைப் பெறலாம். இந்தப் படிவம் நடைமுறையை மட்டும் காட்டுகிறது.",
-    submit: "மாதிரிப் பதிவைப் பார்க்க",
-    success: "இந்தத் திரையில் மட்டும் மாதிரிப் பதிவு செய்யப்பட்டது. உண்மையான தகவலைப் பெற பாதுகாப்பான சேமிப்பு தேவை.",
     footer: "அமைதி · கட்சி சார்பற்றது · ஆதார வழி",
   },
 };
@@ -137,16 +127,21 @@ const actionPlans: Record<Audience, { label: Bilingual; steps: Bilingual[] }> = 
   ] },
 };
 
-const documents: { title: Bilingual; pages: number; section: Bilingual; summary: Bilingual; href: string; thumb: string }[] = [
-  { title: { en: "Appeal to Raise in Assembly", ta: "சட்டமன்றத்தில் எழுப்ப வேண்டிய கோரிக்கை" }, pages: 2, section: { en: "Home + Demands", ta: "முகப்பு + கோரிக்கைகள்" }, summary: { en: "The public appeal and eight factual questions for representatives.", ta: "பொது கோரிக்கை மற்றும் பிரதிநிதிகளுக்கான எட்டு உண்மைக் கேள்விகள்." }, href: "/documents/Appeal_to_Raise_in_Assembly.pdf", thumb: "/assets/docs/Appeal_to_Raise_in_Assembly.webp" },
-  { title: { en: "Mango Action Playbook", ta: "மாம்பழ செயல் வழிகாட்டி" }, pages: 8, section: { en: "Take action", ta: "செயலில் இணைய" }, summary: { en: "Verification log, accountable offices, first 90 days and follow-up system.", ta: "சரிபார்ப்புப் பதிவு, பொறுப்பு அலுவலகங்கள், முதல் 90 நாட்கள் மற்றும் பின்தொடர்பு அமைப்பு." }, href: "/documents/Mango_Action_Playbook.pdf", thumb: "/assets/docs/Mango_Action_Playbook.webp" },
-  { title: { en: "Mango Household Chapter Posters", ta: "மாம்பழ விவசாயக் குடும்ப அத்தியாயச் சுவரொட்டிகள்" }, pages: 12, section: { en: "Crisis", ta: "நெருக்கடி" }, summary: { en: "Twelve household-level chapters on income, debt, education, migration and women.", ta: "வருமானம், கடன், கல்வி, இடம்பெயர்வு, பெண்கள் பற்றிய 12 குடும்ப அத்தியாயங்கள்." }, href: "/documents/Mango_Household_Chapter_Posters.pdf", thumb: "/assets/docs/Mango_Household_Chapter_Posters.webp" },
-  { title: { en: "Mango Tree Cartoon Poster", ta: "மாமரம் விளக்கப்படச் சுவரொட்டி" }, pages: 2, section: { en: "Home + Crisis", ta: "முகப்பு + நெருக்கடி" }, summary: { en: "A simple visual explanation of how a full tree can still leave a family without income.", ta: "மரம் நிறைய பழம் இருந்தும் குடும்பத்திற்கு வருமானம் இல்லாததை விளக்கும் சுவரொட்டி." }, href: "/documents/Mango_Tree_Cartoon_Poster.pdf", thumb: "/assets/docs/Mango_Tree_Cartoon_Poster.webp" },
-  { title: { en: "Mango Tree Cutting Poster", ta: "மாமரம் வெட்டுதல் சுவரொட்டி" }, pages: 2, section: { en: "Crisis", ta: "நெருக்கடி" }, summary: { en: "Why unharvested fruit and tree removal signal long-term productive loss.", ta: "அறுவடை செய்யாத பழமும் மரம் வெட்டுதலும் நீண்டகால இழப்பாக மாறுவது ஏன்." }, href: "/documents/Mango_Tree_Cutting_Poster.pdf", thumb: "/assets/docs/Mango_Tree_Cutting_Poster.webp" },
-  { title: { en: "Mango Value Addition Posters", ta: "மாம்பழ மதிப்புக் கூட்டல் சுவரொட்டிகள்" }, pages: 6, section: { en: "Solutions", ta: "தீர்வுகள்" }, summary: { en: "Products, infrastructure, local jobs and grower ownership beyond pulp alone.", ta: "கூழைத் தாண்டிய பொருட்கள், கட்டமைப்பு, உள்ளூர் வேலை, விவசாயிகள் உரிமை." }, href: "/documents/Mango_Value_Addition_Posters.pdf", thumb: "/assets/docs/Mango_Value_Addition_Posters.webp" },
-  { title: { en: "Paddy vs Mango Comparison", ta: "நெல் – மாம்பழ ஆதரவு ஒப்பீடு" }, pages: 2, section: { en: "Paddy vs Mango", ta: "நெல் – மாம்பழம்" }, summary: { en: "A non-partisan comparison of price, procurement, packages and guaranteed demand.", ta: "விலை, கொள்முதல், தொகுப்பு மற்றும் உறுதியான தேவையின் கட்சி சார்பற்ற ஒப்பீடு." }, href: "/documents/Paddy_vs_Mango_Comparison_Poster.pdf", thumb: "/assets/docs/Paddy_vs_Mango_Comparison_Poster.webp" },
-  { title: { en: "Request for Direct Consultation", ta: "நேரடி கலந்தாலோசனைக்கான கோரிக்கை" }, pages: 6, section: { en: "Demands", ta: "கோரிக்கைகள்" }, summary: { en: "A working-meeting request, field-visit plan, delegation design and ten questions.", ta: "நேரடி கூட்டம், களப் பயணம், பிரதிநிதிக் குழு மற்றும் பத்து கேள்விகள்." }, href: "/documents/Request_for_Direct_Consultation_Mango_Farmers.pdf", thumb: "/assets/docs/Request_for_Direct_Consultation_Mango_Farmers.webp" },
+const totalPages = () => documents.reduce((sum, doc) => sum + doc.pages, 0);
+
+const documents: { id: string; title: Bilingual; pages: number; section: Bilingual; summary: Bilingual; href: string; thumb: string }[] = [
+  { id: "appeal", title: { en: "Appeal to Raise in Assembly", ta: "சட்டமன்றத்தில் எழுப்ப வேண்டிய கோரிக்கை" }, pages: 2, section: { en: "Home + Demands", ta: "முகப்பு + கோரிக்கைகள்" }, summary: { en: "The public appeal and eight factual questions for representatives.", ta: "பொது கோரிக்கை மற்றும் பிரதிநிதிகளுக்கான எட்டு உண்மைக் கேள்விகள்." }, href: "/documents/Appeal_to_Raise_in_Assembly.pdf", thumb: "/assets/docs/Appeal_to_Raise_in_Assembly.webp" },
+  { id: "playbook", title: { en: "Mango Action Playbook", ta: "மாம்பழ செயல் வழிகாட்டி" }, pages: 8, section: { en: "Take action", ta: "செயலில் இணைய" }, summary: { en: "Verification log, accountable offices, first 90 days and follow-up system.", ta: "சரிபார்ப்புப் பதிவு, பொறுப்பு அலுவலகங்கள், முதல் 90 நாட்கள் மற்றும் பின்தொடர்பு அமைப்பு." }, href: "/documents/Mango_Action_Playbook.pdf", thumb: "/assets/docs/Mango_Action_Playbook.webp" },
+  { id: "consultation", title: { en: "Request for Direct Consultation", ta: "நேரடி கலந்தாலோசனைக்கான கோரிக்கை" }, pages: 6, section: { en: "Demands", ta: "கோரிக்கைகள்" }, summary: { en: "A working-meeting request, field-visit plan, delegation design and ten questions.", ta: "நேரடி கூட்டம், களப் பயணம், பிரதிநிதிக் குழு மற்றும் பத்து கேள்விகள்." }, href: "/documents/Request_for_Direct_Consultation_Mango_Farmers.pdf", thumb: "/assets/docs/Request_for_Direct_Consultation_Mango_Farmers.webp" },
+  { id: "compare", title: { en: "Paddy vs Mango Comparison", ta: "நெல் – மாம்பழ ஆதரவு ஒப்பீடு" }, pages: 2, section: { en: "Paddy vs Mango", ta: "நெல் – மாம்பழம்" }, summary: { en: "A non-partisan comparison of price, procurement, packages and guaranteed demand.", ta: "விலை, கொள்முதல், தொகுப்பு மற்றும் உறுதியான தேவையின் கட்சி சார்பற்ற ஒப்பீடு." }, href: "/documents/Paddy_vs_Mango_Comparison_Poster.pdf", thumb: "/assets/docs/Paddy_vs_Mango_Comparison_Poster.webp" },
+  { id: "inputs", title: { en: "Agri-Input Dealers and the Mango Farmer", ta: "இடுபொருள் வியாபாரிகளும் மாம்பழ விவசாயியும்" }, pages: 11, section: { en: "Crisis + Solutions", ta: "நெருக்கடி + தீர்வுகள்" }, summary: { en: "How input costs get inflated and wrong advice damages orchards — with the legal remedies and a plan to cut input spend by 20-40%.", ta: "இடுபொருள் செலவு எப்படி உயர்கிறது, தவறான ஆலோசனை தோட்டங்களை எப்படிப் பாதிக்கிறது — சட்ட வழிகளும், செலவை 20–40% குறைக்கும் திட்டமும்." }, href: "/documents/Agri_Input_Dealers_and_the_Mango_Farmer.pdf", thumb: "/assets/docs/Agri_Input_Dealers_and_the_Mango_Farmer.webp" },
+  { id: "household", title: { en: "Mango Household Chapter Posters", ta: "மாம்பழ விவசாயக் குடும்ப அத்தியாயச் சுவரொட்டிகள்" }, pages: 12, section: { en: "Crisis", ta: "நெருக்கடி" }, summary: { en: "Twelve household-level chapters on income, debt, education, migration and women.", ta: "வருமானம், கடன், கல்வி, இடம்பெயர்வு, பெண்கள் பற்றிய 12 குடும்ப அத்தியாயங்கள்." }, href: "/documents/Mango_Household_Chapter_Posters.pdf", thumb: "/assets/docs/Mango_Household_Chapter_Posters.webp" },
+  { id: "value", title: { en: "Mango Value Addition Posters", ta: "மாம்பழ மதிப்புக் கூட்டல் சுவரொட்டிகள்" }, pages: 6, section: { en: "Solutions", ta: "தீர்வுகள்" }, summary: { en: "Products, infrastructure, local jobs and grower ownership beyond pulp alone.", ta: "கூழைத் தாண்டிய பொருட்கள், கட்டமைப்பு, உள்ளூர் வேலை, விவசாயிகள் உரிமை." }, href: "/documents/Mango_Value_Addition_Posters.pdf", thumb: "/assets/docs/Mango_Value_Addition_Posters.webp" },
+  { id: "cartoon", title: { en: "Mango Tree Cartoon Poster", ta: "மாமரம் விளக்கப்படச் சுவரொட்டி" }, pages: 2, section: { en: "Home + Crisis", ta: "முகப்பு + நெருக்கடி" }, summary: { en: "A simple visual explanation of how a full tree can still leave a family without income.", ta: "மரம் நிறைய பழம் இருந்தும் குடும்பத்திற்கு வருமானம் இல்லாததை விளக்கும் சுவரொட்டி." }, href: "/documents/Mango_Tree_Cartoon_Poster.pdf", thumb: "/assets/docs/Mango_Tree_Cartoon_Poster.webp" },
 ];
+
+/** Look a document up by name, so reordering the list never breaks a link. */
+const doc = (id: string) => documents.find((entry) => entry.id === id)!;
 
 const solutions: { step: string; art: CartoonName; horizon: Bilingual; title: Bilingual; body: Bilingual }[] = [
   { step: "01", art: "priceBoard", horizon: { en: "NOW · DISTRICT", ta: "இப்போது · மாவட்டம்" }, title: { en: "Make the market visible", ta: "சந்தையை வெளிப்படையாக்குக" }, body: { en: "Weekly procurement data, daily price boards and one working grievance line.", ta: "வாராந்திர கொள்முதல் தரவு, தினசரி விலை பலகைகள் மற்றும் செயல்படும் குறைதீர் எண்." } },
@@ -183,7 +178,6 @@ export default function Home() {
   const [audience, setAudience] = useState<Audience>("citizen");
   const [menuOpen, setMenuOpen] = useState(false);
   const [shared, setShared] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const [zoomed, setZoomed] = useState(false);
   const pulse = useMovementPulse();
   const t = ui[lang];
@@ -202,12 +196,11 @@ export default function Home() {
     } catch { /* share cancelled */ }
   }
 
-  function submitStory(event: FormEvent<HTMLFormElement>) { event.preventDefault(); setSubmitted(true); }
   function closeMenu() { setMenuOpen(false); }
 
-  const homeDocs = [documents[0], documents[3]];
-  const crisisDocs = [documents[2], documents[4]];
-  const demandDocs = [documents[0], documents[7]];
+  const homeDocs = [doc("appeal"), doc("cartoon")];
+  const crisisDocs = [doc("household"), doc("cartoon")];
+  const demandDocs = [doc("appeal"), doc("consultation")];
 
   return (
     <main>
@@ -321,7 +314,7 @@ export default function Home() {
           {comparison.map((row) => <div className="comparison-row" key={row.label.en}><strong>{row.label[lang]}</strong><p className="paddy-cell"><span>✓</span>{row.paddy[lang]}</p><p className="mango-cell"><span>!</span>{row.mango[lang]}</p></div>)}
         </div>
         <div className="compare-note"><strong>{lang === "ta" ? "முக்கிய விளக்கம்" : "THE IMPORTANT DISTINCTION"}</strong><p>{lang === "ta" ? "நெல்லிலிருந்து எதையும் எடுத்துக்கொள்ள வேண்டும் என்பது கோரிக்கை அல்ல. நெல் விவசாயிக்கு ஏற்கனவே உள்ள விலை, வாங்குபவர், மையம், உறுதியான தேவை போன்ற அமைப்பை மாம்பழத்திற்கும் உருவாக்க வேண்டும் என்பதே கோரிக்கை." : "The demand is not to take anything from paddy. It is to build for mango the same kinds of machinery paddy already has: an early price, a permanent buyer, reachable centres and policy-backed demand."}</p></div>
-        <PdfLinks doc={documents[6]} lang={lang} />
+        <PdfLinks doc={doc("compare")} lang={lang} />
       </section>
 
       <section className="action-section" id="act">
@@ -337,17 +330,17 @@ export default function Home() {
 
           <div className="audience-tabs" role="tablist" aria-label={lang === "ta" ? "செயல் பங்கைத் தேர்ந்தெடுக்கவும்" : "Choose an action role"}>{(Object.keys(actionPlans) as Audience[]).map((key) => <button role="tab" aria-selected={audience === key} className={audience === key ? "active" : ""} onClick={() => setAudience(key)} key={key}>{actionPlans[key].label[lang]}</button>)}</div>
           <div className="role-panel" role="tabpanel"><div className="role-steps">{plan.steps.map((step, index) => <article key={step.en}><span>0{index + 1}</span><p>{step[lang]}</p></article>)}</div><div className="role-share"><img src="/assets/farmers-voice-logo.png" alt={lang === "ta" ? "விவசாயிகளின் குரல் இயக்கப் படம்" : "Farmers' Voice campaign image"} /><h3>{lang === "ta" ? "ஒரு உண்மை. ஒரு ஆதாரம். இன்னொரு குரல்." : "One fact. One source. One more voice."}</h3><button className="button button-primary" onClick={shareMovement}>{shared ? t.copied : t.share} <Arrow /></button></div></div>
-          <PdfLinks doc={documents[1]} lang={lang} />
+          <PdfLinks doc={doc("playbook")} lang={lang} />
 
           <VotingBox lang={lang} votes={pulse.votes} myVote={pulse.myVote} total={pulse.totalVotes} onVote={pulse.castVote} />
 
-          <div className="testimony-block"><div><p className="eyebrow">{lang === "ta" ? "மாதிரிச் சாட்சிப் படிவம்" : "DEMO TESTIMONY FLOW"}</p><h3>{t.formTitle}</h3><p>{t.formBody}</p><small>{t.demoOnly}</small></div><form onSubmit={submitStory}><div className="field-row"><label><span>{lang === "ta" ? "பெயர் / சங்கம்" : "Name / association"}</span><input required placeholder={lang === "ta" ? "பெயர்" : "Name"} /></label><label><span>{lang === "ta" ? "கிராமம் / வட்டாரம்" : "Village / block"}</span><input required placeholder={lang === "ta" ? "இடம்" : "Location"} /></label></div><label><span>{lang === "ta" ? "இந்த பருவத்தில் என்ன நடந்தது?" : "What happened this season?"}</span><textarea required rows={4} placeholder={lang === "ta" ? "விலை, அளவு, தேதி…" : "Price, quantity, date…"}></textarea></label><button className="button button-primary" type="submit">{t.submit} <Arrow /></button>{submitted && <p className="form-success" role="status">✓ {t.success}</p>}</form></div>
+
         </div>
       </section>
 
       <section className="evidence-section" id="evidence">
         <div className="section">
-          <div className="evidence-heading"><div><p className="eyebrow light">{t.evidenceTag}</p><SectionAudio topic="evidence" lang={lang} /><h2>{t.evidenceTitle}</h2><p>{t.evidenceBody}</p></div><div className="evidence-counts"><div><strong>8</strong><span>{lang === "ta" ? "அசல் ஆவணங்கள்" : "original PDFs"}</span></div><div><strong>40</strong><span>{lang === "ta" ? "மொத்த பக்கங்கள்" : "total pages"}</span></div><div><strong>2</strong><span>{lang === "ta" ? "மொழிகள்" : "languages"}</span></div></div></div>
+          <div className="evidence-heading"><div><p className="eyebrow light">{t.evidenceTag}</p><SectionAudio topic="evidence" lang={lang} /><h2>{t.evidenceTitle}</h2><p>{t.evidenceBody}</p></div><div className="evidence-counts"><div><strong>{documents.length}</strong><span>{lang === "ta" ? "அசல் ஆவணங்கள்" : "original PDFs"}</span></div><div><strong>{totalPages()}</strong><span>{lang === "ta" ? "மொத்த பக்கங்கள்" : "total pages"}</span></div><div><strong>2</strong><span>{lang === "ta" ? "மொழிகள்" : "languages"}</span></div></div></div>
           <div className="library-grid">{documents.map((doc, index) => <article className="library-card" key={doc.title.en}><div className="library-cover"><img src={doc.thumb} alt={lang === "ta" ? `${doc.title.ta} ஆவணத்தின் முன்னோட்டம்` : `Preview of ${doc.title.en}`} /><span>0{index + 1}</span></div><div className="library-copy"><p className="library-section">{doc.section[lang]}</p><h3>{doc.title[lang]}</h3><p>{doc.summary[lang]}</p><div className="library-foot"><span>{lang === "ta" ? "மின்னணு ஆவணம்" : "PDF"} · {doc.pages} {lang === "ta" ? "பக்கங்கள்" : "pages"}</span><div className="doc-actions"><a className="doc-btn doc-btn-read" href={doc.href} target="_blank" rel="noreferrer" aria-label={lang === "ta" ? `${doc.title.ta} ஆவணத்தைப் படிக்க` : `Read ${doc.title.en}`}>{t.open} <Arrow /></a><a className="doc-btn doc-btn-save" href={doc.href} download aria-label={lang === "ta" ? `${doc.title.ta} ஆவணத்தைப் பதிவிறக்க` : `Download ${doc.title.en}`}><DownloadIcon />{t.download}</a></div></div></div></article>)}</div>
           <p className="fact-check-note"><span>i</span>{lang === "ta" ? "பொதுவெளியில் வெளியிடும் முன் பருவ விலை, தற்போதைய அதிகாரிகள் மற்றும் அறிவிக்கப்பட்ட திட்டங்களை புதிய அரசு பதிவுகளுடன் மீண்டும் சரிபார்க்கவும். ஆவணங்களில் ₹4–5 என்பது விவசாயிகள் தெரிவித்த விலை; அதிகாரப்பூர்வ தொடர் அல்ல." : "Before a public launch, re-check seasonal prices, current officeholders and announced proposals against fresh official records. In the documents, ₹4–5 is a grower-reported price, not an official series."}</p>
 
@@ -358,7 +351,7 @@ export default function Home() {
       <section className="solutions-section" id="solutions">
         <div className="solution-hero section"><div><p className="eyebrow light">{t.solutionsTag}</p><SectionAudio topic="solutions" lang={lang} /><h2>{t.solutionsTitle}</h2><p>{t.solutionsBody}</p></div><img src="/assets/farmers-voice-logo.png" alt={lang === "ta" ? "விவசாயிகளின் குரல் இயக்கப் படம்" : "Farmers' Voice campaign image"} /></div>
         <div className="solution-grid section">{solutions.map((solution) => <article key={solution.step}><div><span>{solution.step}</span><small>{solution.horizon[lang]}</small></div><Cartoon name={solution.art} className="solution-art" /><h3>{solution.title[lang]}</h3><p>{solution.body[lang]}</p></article>)}</div>
-        <div className="value-slice"><img src="/assets/docs/Mango_Value_Addition_Posters.webp" alt={lang === "ta" ? "மாம்பழ மதிப்புக் கூட்டல் சுவரொட்டியின் முன்னோட்டம்" : "Mango value addition poster preview"} /><div><p className="eyebrow light">{lang === "ta" ? "மரத்திலிருந்து உள்ளூர் மதிப்புக்கு" : "FROM TREE TO LOCAL VALUE"}</p><h3>{lang === "ta" ? "பழக்கூழ் மட்டும் ஒரு தொழில் அல்ல. முழு மதிப்புச் சங்கிலி தேவை." : "A pulp unit alone is not an industry. The whole value chain is needed."}</h3><p>{lang === "ta" ? "தோட்டம், சேகரிப்பு, குளிர்ச் சங்கிலி, பதப்படுத்தல், சோதனை, சான்றிதழ், போக்குவரத்து, சந்தை — இவை அனைத்தும் இணைந்தால் மட்டுமே விவசாயிக்கு விலை மற்றும் இளைஞருக்கு உள்ளூர் வேலை கிடைக்கும்." : "Orchard, collection, cold chain, processing, testing, certification, cargo and market must work together. That is how fruit becomes bargaining power for growers and skilled local work for young people."}</p><div className="pdf-actions solution-actions"><a className="doc-btn doc-btn-read" href={documents[5].href} target="_blank" rel="noreferrer">{t.open} <Arrow /></a><a className="doc-btn doc-btn-save" href={documents[5].href} download><DownloadIcon />{t.download}</a></div></div></div>
+        <div className="value-slice"><img src="/assets/docs/Mango_Value_Addition_Posters.webp" alt={lang === "ta" ? "மாம்பழ மதிப்புக் கூட்டல் சுவரொட்டியின் முன்னோட்டம்" : "Mango value addition poster preview"} /><div><p className="eyebrow light">{lang === "ta" ? "மரத்திலிருந்து உள்ளூர் மதிப்புக்கு" : "FROM TREE TO LOCAL VALUE"}</p><h3>{lang === "ta" ? "பழக்கூழ் மட்டும் ஒரு தொழில் அல்ல. முழு மதிப்புச் சங்கிலி தேவை." : "A pulp unit alone is not an industry. The whole value chain is needed."}</h3><p>{lang === "ta" ? "தோட்டம், சேகரிப்பு, குளிர்ச் சங்கிலி, பதப்படுத்தல், சோதனை, சான்றிதழ், போக்குவரத்து, சந்தை — இவை அனைத்தும் இணைந்தால் மட்டுமே விவசாயிக்கு விலை மற்றும் இளைஞருக்கு உள்ளூர் வேலை கிடைக்கும்." : "Orchard, collection, cold chain, processing, testing, certification, cargo and market must work together. That is how fruit becomes bargaining power for growers and skilled local work for young people."}</p><div className="pdf-actions solution-actions"><a className="doc-btn doc-btn-read" href={doc("value").href} target="_blank" rel="noreferrer">{t.open} <Arrow /></a><a className="doc-btn doc-btn-save" href={doc("value").href} download><DownloadIcon />{t.download}</a></div></div></div>
         <div className="closing-call section"><img src="/assets/farmers-voice-logo.png" alt={lang === "ta" ? "விவசாயிகளின் குரல் இயக்கப் படம்" : "Farmers' Voice campaign image"} /><p>{lang === "ta" ? "நெல்லுக்கு செய்ததை மாம்பழத்திற்கும் செய்யுங்கள்." : "Do for mango what has already been done for paddy."}</p><div><a className="button button-primary" href="#act">{t.join} <Arrow /></a><button className="button button-light" onClick={shareMovement}>{shared ? t.copied : t.share}</button></div></div>
       </section>
 

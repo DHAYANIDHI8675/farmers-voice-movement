@@ -1379,3 +1379,139 @@ html[lang="ta"] .kit-grid p,html[lang="ta"] .faq-panel p{font-weight:600!importa
   .cov-poster .cartoon{max-width:150px}
 }
 @media(prefers-reduced-motion:reduce){.cov{animation:none}.ref-tip{transition:none}}
+
+/* ==================================================================
+   Watch and follow: brought onto the project's warm palette
+   It was carrying a teal-green top edge, green heading and green
+   outline button, which read as a different site next to the mango
+   gradients everywhere else.
+   ================================================================== */
+
+.social-box{
+  padding:15px 16px 16px;
+  border-top:5px solid transparent;
+  background-image:linear-gradient(180deg,#FFFDF7,#FFF4E4),var(--g-warm);
+  background-origin:border-box;background-clip:padding-box,border-box;
+  box-shadow:var(--shadow)}
+.social-box-tag{margin:0 0 11px;color:var(--rust)}
+.social-box-tag span{color:var(--flesh)}
+
+/* Chips: poster-led, warm, and clearly tappable */
+.ref-strip{gap:8px}
+.ref-chip{padding:0;overflow:hidden;border:2px solid rgba(11,31,20,.1);border-radius:12px;background:var(--white)}
+.ref-chip:hover,.ref-chip:focus-visible{border-color:var(--flesh);background:var(--white);
+  box-shadow:0 12px 26px rgba(224,58,22,.2)}
+.ref-chip-poster{border-radius:0;padding:6px 4px 2px;background:linear-gradient(180deg,#FFF6E6,#FFE9C9)}
+.ref-chip-poster i{right:3px;bottom:3px;width:16px;height:16px;background:#FF0033;
+  box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.ref-chip-name{padding:5px 4px 7px;background:var(--white);font-size:9.5px;color:var(--ink)}
+.ref-chip:hover .ref-chip-name{color:var(--rust)}
+
+/* The action button now matches the primary buttons on the rest of the site */
+.ref-all{margin-top:10px;border:0;background:var(--g-warm);color:#3A1400;
+  box-shadow:0 8px 20px rgba(255,110,30,.3);font-size:12px}
+.ref-all:hover{background:var(--night);color:var(--sun);translate:0 -2px}
+
+/* Preview card: warm accents rather than a green panel */
+.ref-tip{background:linear-gradient(160deg,#13230F,#06150D);border:1px solid rgba(255,158,27,.4)}
+.ref-tip::after{border-left-color:#0C1B10}
+.ref-tip-poster{background:linear-gradient(180deg,#FFF6E6,#FFE9C9)}
+.ref-tip-copy b{color:var(--mango)}
+.ref-tip-copy u{color:var(--sun)}
+
+/* Your own channel tiles keep their brand colours but sit on the warm card */
+.social-grid{margin-bottom:10px}
+.social-tile{background:var(--white);border-color:rgba(11,31,20,.1)}
+.social-tile svg{color:var(--rust)}
+
+@media(max-width:620px){
+  .ref-chip-name{font-size:9px}
+}
+
+/* ==================================================================
+   Hero: kicker anchored top-left, headline balanced with the artwork
+   The grid was centring the text column, which pushed the district line
+   down into the middle of the page. Both columns now start at the top,
+   so the kicker sits in the corner and the headline reads level with
+   the image beside it.
+   ================================================================== */
+
+.hero-grid{align-items:start}
+.hero-copy{align-self:start;padding-top:4px}
+
+/* District line: larger and heavier, as the first thing read on the page */
+.kicker{font-size:15px!important;font-weight:800!important;letter-spacing:.12em!important;
+  margin-bottom:26px;color:var(--rust)!important;background:none!important;-webkit-text-fill-color:currentColor}
+.kicker::before{width:44px;height:4px;border-radius:2px;background:var(--g-warm)}
+.kicker span{color:var(--flesh)}
+
+/* Headline sits level with the top of the artwork */
+h1{margin-top:0}
+.hero-copy>h1{margin-bottom:30px}
+
+@media(max-width:920px){
+  .kicker{font-size:13.5px!important;margin-bottom:20px}
+  .hero-grid{align-items:stretch}
+}
+@media(max-width:620px){
+  .kicker{font-size:12.5px!important;letter-spacing:.1em!important}
+  .kicker::before{width:32px}
+}
+
+/* --- Newest report, surfaced in the Watch and follow box ------------- */
+.latest-report{display:grid;grid-template-columns:52px 1fr;gap:11px;align-items:center;
+  margin-bottom:10px;padding:9px 11px;border-radius:12px;text-decoration:none;
+  background:linear-gradient(180deg,#FFF6E6,#FFE9C9);border:2px solid rgba(224,58,22,.28);
+  transition:translate .2s var(--ease-out),border-color .2s ease,box-shadow .2s ease}
+.latest-report:hover{translate:0 -2px;border-color:var(--flesh);box-shadow:0 12px 26px rgba(224,58,22,.2)}
+.latest-report img{width:52px;height:auto;border-radius:5px;border:1px solid rgba(11,31,20,.16);display:block}
+.latest-report span{display:grid;gap:2px;min-width:0}
+.latest-report b{color:var(--rust);font-size:8.5px;font-weight:800;letter-spacing:.13em}
+.latest-report strong{font-family:"Baloo Thambi 2",serif;font-size:12.5px;line-height:1.2;color:var(--ink)}
+.latest-report em{font-style:normal;font-size:10px;line-height:1.35;color:var(--muted);font-weight:600}
+.latest-report u{text-decoration:none;color:var(--rust);font-size:9.5px;font-weight:800}
+
+/* ==================================================================
+   Hero balance
+   The district line sits in the top-left corner, and the headline block
+   is sized so it ends level with the artwork beside it rather than
+   running well past its bottom edge.
+   ================================================================== */
+
+.hero{padding-top:46px}
+
+/* District line: larger and heavier again, hard to the top-left */
+.kicker{font-size:17px!important;letter-spacing:.1em!important;margin-bottom:22px;
+  gap:14px}
+.kicker::before{width:52px;height:5px}
+
+/* Headline sized to match the artwork's height. Tamil wraps into more
+   lines than English at the same size, so it is set a step smaller. */
+h1{font-size:clamp(40px,5.4vw,78px)!important;line-height:1.03!important}
+html[lang="ta"] h1{font-size:clamp(34px,4.5vw,66px)!important;line-height:1.12!important}
+.hero-copy>h1{margin-bottom:26px}
+
+@media(max-width:920px){
+  .hero{padding-top:34px}
+  .kicker{font-size:14px!important;margin-bottom:18px}
+  h1,html[lang="ta"] h1{font-size:clamp(34px,8vw,52px)!important}
+}
+/* Tuned so the headline's last line finishes level with the artwork. */
+h1{font-size:clamp(40px,6vw,86px)!important;line-height:1.04!important}
+html[lang="ta"] h1{font-size:clamp(34px,5.4vw,78px)!important;line-height:1.1!important}
+@media(max-width:920px){
+  h1,html[lang="ta"] h1{font-size:clamp(34px,8vw,52px)!important}
+}
+/* Wrapping, not font size, is what controls the block height here — a
+   narrower measure gives a predictable line count in both languages, so
+   the headline finishes level with the artwork instead of overshooting. */
+h1{font-size:clamp(40px,5.6vw,80px)!important;line-height:1.05!important;max-width:11ch}
+html[lang="ta"] h1{font-size:clamp(34px,4.8vw,70px)!important;line-height:1.12!important;max-width:13ch}
+@media(max-width:920px){
+  h1,html[lang="ta"] h1{font-size:clamp(34px,8vw,52px)!important;max-width:none}
+}
+/* English needs a narrower measure than Tamil to reach the same depth. */
+h1{max-width:9ch}
+@media(max-width:920px){h1{max-width:none}}
+h1{max-width:10ch}
+@media(max-width:920px){h1{max-width:none}}

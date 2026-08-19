@@ -44,15 +44,30 @@ are stored in the project — the poster is drawn fresh each time, so editing th
 facts in `app/sharecard.tsx` changes the images immediately.
 
 ### Section audio (`app/audio.tsx`)
-Each major section has a "Listen to this" button using the browser's built-in
-speech engine. Scripts are written to be *heard* rather than read, and live in
-`audioScripts` — edit the text there to change what is spoken.
+Each major section has a "Listen to this" button. It works in **both languages on
+every device**, using two sources:
 
-One limitation worth knowing: the voices belong to the device, not to this site.
-Most phones have an English voice; a Tamil voice is not guaranteed. Rather than
-reading Tamil words in an English accent, the button says so and points the
-person to their device's speech settings. On Android, Tamil can usually be added
-under Settings, Accessibility, Text-to-speech.
+1. **A voice installed on the device**, when there is one for that language. This
+   sounds best. Most phones have an English voice.
+2. **A bundled recording**, when there is not. Tamil voices are rare on Windows
+   and on many phones, so all twenty clips (ten sections x two languages) ship
+   with the site in `public/audio/`. About 2.4 MB in total, and nothing is
+   downloaded until someone presses play.
+
+This was tested on a browser with **zero** voices installed: all ten sections
+played in Tamil from the bundled files.
+
+The spoken text lives in `audioScripts` in `app/audio.tsx`. If you change it,
+regenerate that clip, or the button will fall back to the old recording. The
+clips were made with espeak-ng:
+
+    espeak-ng -v ta -s 135 -p 45 -w out.wav "your Tamil text"
+    ffmpeg -y -i out.wav -ac 1 -ar 22050 -b:a 32k public/audio/crisis-ta.mp3
+
+The bundled Tamil voice is synthetic and sounds robotic. It is there so that no
+one is left with silence. If you can record a real person reading these scripts,
+replace the files in `public/audio/` keeping the same names — that would be a
+large improvement and needs no code change.
 
 ### The site guide (`app/assistant.tsx`)
 A floating "Ask" button, bottom right. Someone can type or speak a question in
@@ -169,6 +184,55 @@ count of real supporters.
 Both live at the top of `app/engage.tsx`: `BASE_LIKES` for likes, and the `base`
 value on each entry in `pollOptions` for votes. Set them to 0 to show only
 genuine counts.
+
+## Shared likes and votes (deployed sites)
+
+`app/api/pulse/route.ts` is a real counter backed by **MySQL**. Likes and votes
+go to your server, so every visitor sees the same totals — one person's like
+shows up for everybody else.
+
+This has been tested end to end against a live MySQL server: the table creating
+itself, a vote moving rather than double-counting, an unlike refusing to go
+below zero, and the counts surviving a full server restart.
+
+### Turning on permanent storage
+
+1. Create a MySQL database. Any MySQL 5.7+ or MariaDB works — PlanetScale,
+   Aiven, Railway, Clever Cloud, or a MySQL server you already run.
+2. In your Render dashboard: open the service, go to **Environment**, and add:
+
+       DATABASE_URL = mysql://user:password@host:3306/dbname
+
+3. Redeploy, then open `https://your-site/api/pulse`. It reports which store it
+   is using:
+
+       {"likes":0,"votes":{},"storage":"mysql","stored":true}
+
+   `"storage":"mysql"` means connected. `"storage":"memory"` means it is not —
+   check the variable name, that you redeployed after adding it, and that your
+   database allows connections from Render's IP addresses.
+
+The `pulse_counts` table is created automatically on first use. There is no
+migration to run and nothing to set up by hand.
+
+TLS is switched on automatically for remote hosts and skipped for localhost, so
+the same connection string format works in both places.
+
+### Without a database
+
+Counts are held in the server's memory: still shared between visitors, but they
+reset whenever the server restarts, which on a free hosting tier happens after
+inactivity. Fine for testing, not for a live campaign.
+
+### What is actually stored
+
+Only the real, earned counts. The presentational starting figures (4,587 and
+1,298) are added on the client, so the table always reflects what people
+actually did. The day you set those baselines to zero, the genuine numbers are
+still there.
+
+If the server cannot be reached at all, the page falls back to this device's own
+counts so nothing breaks.
 
 ## Making the counts shared across everyone
 

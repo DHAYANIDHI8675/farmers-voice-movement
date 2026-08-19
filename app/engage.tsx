@@ -68,10 +68,18 @@ function writeStore(store: Store) {
   }
 }
 
-/* A tiny subscribable store. The server always renders the empty state,
-   then the browser swaps in the saved counts on hydration. */
+/* A tiny subscribable store.
+ *
+ * `mine` is what THIS visitor did, kept in localStorage so the button
+ * states survive a refresh. `shared` is the real total from the server,
+ * which every visitor sees. If the server cannot be reached, the shared
+ * total falls back to this device's own actions so the page still works
+ * and the buttons still respond. */
 let cache: Store | null = null;
+let shared: { likes: number; votes: Record<string, number> } | null = null;
+let serverUp = false;
 const listeners = new Set<() => void>();
+let snapshot: Snapshot | null = null;
 
 function subscribe(listener: () => void) {
   listeners.add(listener);
@@ -80,29 +88,89 @@ function subscribe(listener: () => void) {
   };
 }
 
-function getSnapshot(): Store {
-  if (!cache) cache = readStore();
-  return cache;
+type Snapshot = Store & { sharedLikes: number; sharedVotes: Record<string, number>; live: boolean };
+
+function build(): Snapshot {
+  const mine = cache ?? (cache = readStore());
+  return {
+    ...mine,
+    sharedLikes: shared ? shared.likes : mine.likes,
+    sharedVotes: shared ? shared.votes : mine.votes,
+    live: serverUp,
+  };
 }
 
-const getServerSnapshot = (): Store => emptyStore;
+function getSnapshot(): Snapshot {
+  if (!snapshot) snapshot = build();
+  return snapshot;
+}
+
+const serverSnapshot: Snapshot = { ...emptyStore, sharedLikes: 0, sharedVotes: {}, live: false };
+const getServerSnapshot = (): Snapshot => serverSnapshot;
+
+function publish() {
+  snapshot = build();
+  listeners.forEach((listener) => listener());
+}
 
 function commit(next: Store) {
   cache = next;
   writeStore(next);
-  listeners.forEach((listener) => listener());
+  publish();
 }
+
+/** Ask the server for the shared totals. */
+async function pull() {
+  try {
+    const response = await fetch("/api/pulse", { cache: "no-store" });
+    if (!response.ok) throw new Error(String(response.status));
+    const data = (await response.json()) as { likes: number; votes: Record<string, number> };
+    shared = { likes: Number(data.likes) || 0, votes: data.votes ?? {} };
+    serverUp = true;
+  } catch {
+    // No endpoint, or offline. The page keeps working on local counts.
+    serverUp = false;
+  }
+  publish();
+}
+
+async function push(body: Record<string, unknown>) {
+  try {
+    const response = await fetch("/api/pulse", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    if (!response.ok) throw new Error(String(response.status));
+    const data = (await response.json()) as { likes: number; votes: Record<string, number> };
+    shared = { likes: Number(data.likes) || 0, votes: data.votes ?? {} };
+    serverUp = true;
+  } catch {
+    serverUp = false;
+  }
+  publish();
+}
+
+let pulled = false;
 
 export function useMovementPulse() {
   const store = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
+  useEffect(() => {
+    if (pulled) return;
+    pulled = true;
+    pull();
+  }, []);
+
   const toggleLike = useCallback(() => {
     const current = getSnapshot();
+    const liking = !current.liked;
     commit(
-      current.liked
-        ? { ...current, liked: false, likes: Math.max(0, current.likes - 1) }
-        : { ...current, liked: true, likes: current.likes + 1 }
+      liking
+        ? { liked: true, likes: current.likes + 1, votes: current.votes, myVote: current.myVote }
+        : { liked: false, likes: Math.max(0, current.likes - 1), votes: current.votes, myVote: current.myVote }
     );
+    push({ action: liking ? "like" : "unlike" });
   }, []);
 
   const castVote = useCallback((id: string) => {
@@ -111,20 +179,29 @@ export function useMovementPulse() {
     const votes = { ...current.votes };
     if (current.myVote) votes[current.myVote] = Math.max(0, (votes[current.myVote] ?? 1) - 1);
     votes[id] = (votes[id] ?? 0) + 1;
-    commit({ ...current, votes, myVote: id });
+    commit({ liked: current.liked, likes: current.likes, votes, myVote: id });
+    push({ action: "vote", option: id, previous: current.myVote });
   }, []);
 
   const reset = useCallback(() => commit(emptyStore), []);
 
-  // The baseline is added here, at the point of display, so the stored
-  // numbers stay a clean record of what this visitor actually did.
+  // Displayed figures: the presentational baseline plus the real shared count.
   const votes: Record<string, number> = {};
   pollOptions.forEach((option) => {
-    votes[option.id] = option.base + (store.votes[option.id] ?? 0);
+    votes[option.id] = option.base + (store.sharedVotes[option.id] ?? 0);
   });
   const totalVotes = Object.values(votes).reduce((sum, n) => sum + n, 0);
 
-  return { ...store, votes, likes: BASE_LIKES + store.likes, totalVotes, toggleLike, castVote, reset };
+  return {
+    ...store,
+    votes,
+    likes: BASE_LIKES + store.sharedLikes,
+    totalVotes,
+    live: store.live,
+    toggleLike,
+    castVote,
+    reset,
+  };
 }
 
 /* Reading window.location during render would break server rendering,

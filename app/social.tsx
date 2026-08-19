@@ -5,6 +5,21 @@ import { Cartoon } from "./cartoons";
 import { Language } from "./audio";
 import { liveReferences } from "./references";
 
+/* The newest document, surfaced in the hero so it is not buried in the library. */
+const latestReport = {
+  href: "/documents/Agri_Input_Dealers_and_the_Mango_Farmer.pdf",
+  thumb: "/assets/docs/Agri_Input_Dealers_and_the_Mango_Farmer.webp",
+  pages: 11,
+  title: {
+    en: "Agri-Input Dealers and the Mango Farmer",
+    ta: "இடுபொருள் வியாபாரிகளும் மாம்பழ விவசாயியும்",
+  },
+  note: {
+    en: "How input costs get inflated, and how to cut them by 20-40%.",
+    ta: "இடுபொருள் செலவு எப்படி உயர்கிறது; அதை 20–40% குறைப்பது எப்படி.",
+  },
+};
+
 /* ------------------------------------------------------------------ *
  * Watch and follow
  *
@@ -164,6 +179,18 @@ export function SocialBox({ lang }: { lang: Language }) {
             ))}
           </div>
         )}
+
+        <a className="latest-report" href={latestReport.href} target="_blank" rel="noreferrer">
+          <img src={latestReport.thumb} alt="" width={720} height={1018} />
+          <span>
+            <b>{ta ? "புதிய அறிக்கை" : "NEW REPORT"}</b>
+            <strong>{latestReport.title[lang]}</strong>
+            <em>{latestReport.note[lang]}</em>
+            <u>
+              {ta ? `${latestReport.pages} பக்கங்கள் · படிக்க` : `${latestReport.pages} pages · Read`} ↗
+            </u>
+          </span>
+        </a>
 
         {preview.length > 0 && (
         <div className="ref-strip">

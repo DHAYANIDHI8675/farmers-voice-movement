@@ -123,8 +123,8 @@ export const topics: Topic[] = [
     section: "evidence",
     title: { en: "The source documents", ta: "ஆதார ஆவணங்கள்" },
     answer: {
-      en: "All eight original PDFs are in the Evidence Library — around forty pages, in both languages. You can read them in the browser or download them for a meeting, a village display or a representation. Every figure on this site traces back to one of them.",
-      ta: "எட்டு அசல் ஆவணங்களும் 'ஆதாரங்கள்' பகுதியில் உள்ளன — சுமார் நாற்பது பக்கங்கள், இரு மொழிகளிலும். இணையத்தில் படிக்கலாம் அல்லது கூட்டம், கிராமக் காட்சி, மனுவுக்காகப் பதிவிறக்கலாம்.",
+      en: "All eight original PDFs are in the Evidence Library — around fifty pages, in both languages. You can read them in the browser or download them for a meeting, a village display or a representation. Every figure on this site traces back to one of them.",
+      ta: "எட்டு அசல் ஆவணங்களும் 'ஆதாரங்கள்' பகுதியில் உள்ளன — சுமார் ஐம்பது பக்கங்கள், இரு மொழிகளிலும். இணையத்தில் படிக்கலாம் அல்லது கூட்டம், கிராமக் காட்சி, மனுவுக்காகப் பதிவிறக்கலாம்.",
     },
     keys: ["document", "pdf", "proof", "evidence", "source", "download", "read", "report", "paper",
       "ஆவண", "ஆதார", "பதிவிறக்க", "படிக்க",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export type Language = "en" | "ta";
 
@@ -129,6 +129,10 @@ export const audioScripts: Record<string, Record<Language, string>> = {
     en: "Some things are said often about this issue. That a price was announced, so the problem is solved. But it arrived after harvest had begun. That prices are low because the fruit is poor quality. But growers report the same low price across grades. That farmers could simply wait for a better price. But paddy stores for months and Totapuri does not. And that this movement is against paddy farmers. It is not. The comparison is crop to crop.",
     ta: "இந்தப் பிரச்சினை குறித்து சில கருத்துகள் அடிக்கடி சொல்லப்படுகின்றன. விலை அறிவிக்கப்பட்டுவிட்டது, எனவே பிரச்சினை தீர்ந்தது என்பது ஒன்று; ஆனால் அது அறுவடை தொடங்கிய பிறகே வந்தது. பழத்தின் தரம் குறைவு என்பதால் விலை குறைவு என்பது இன்னொன்று; ஆனால் அனைத்து தரங்களுக்கும் ஒரே குறைந்த விலையே கிடைக்கிறது. விவசாயிகள் காத்திருக்கலாம் என்பது மற்றொன்று; ஆனால் நெல்லை மாதங்கள் சேமிக்கலாம், தோத்தாபுரியை முடியாது.",
   },
+  evidence: {
+    en: "Every document behind this site is here in full: eight original PDFs, about fifty pages, in both languages. You can read them in the browser or download them for a meeting, a village display or a representation. Nothing on this site asks to be believed on trust. Every figure traces back to one of these files, and you are meant to check them.",
+    ta: "இந்தத் தளத்தின் அனைத்து ஆவணங்களும் இங்கே முழுமையாக உள்ளன: எட்டு அசல் ஆவணங்கள், சுமார் ஐம்பது பக்கங்கள், இரு மொழிகளிலும். இணையத்தில் படிக்கலாம் அல்லது கூட்டம், கிராமக் காட்சி, மனுவுக்காகப் பதிவிறக்கலாம். இந்தத் தளத்தில் எதையும் நம்பிக்கையின் அடிப்படையில் ஏற்கச் சொல்லவில்லை. ஒவ்வொரு எண்ணும் இந்த ஆவணங்களில் ஒன்றிலிருந்து வருகிறது; அவற்றைச் சரிபார்ப்பதே நோக்கம்.",
+  },
   faq: {
     en: "Two questions come up most. Is this political? No. It supports no party and opposes none, and every demand is addressed to an office by its function. And is the four to five rupee figure official? No. That is what growers report. Fifteen rupees forty five paise is the notified figure. The whole demand is that official weekly data be published, so the two can finally be compared.",
     ta: "இரண்டு கேள்விகள் அதிகம் கேட்கப்படுகின்றன. இது அரசியலா? இல்லை. எந்தக் கட்சிக்கும் ஆதரவோ எதிர்ப்போ இல்லை; ஒவ்வொரு கோரிக்கையும் ஒரு பதவிக்கே அனுப்பப்படுகிறது. நான்கு முதல் ஐந்து ரூபாய் என்பது அதிகாரப்பூர்வமா? இல்லை. அது விவசாயிகள் தெரிவிப்பது. பதினைந்து ரூபாய் நாற்பத்தைந்து காசு என்பது அறிவிக்கப்பட்டது. இவ்விரண்டையும் ஒப்பிட அதிகாரப்பூர்வ வாராந்திரத் தரவு வெளியிடப்பட வேண்டும் என்பதே கோரிக்கை.",
@@ -140,40 +144,74 @@ export const audioScripts: Record<string, Record<Language, string>> = {
  * ------------------------------------------------------------------ */
 
 let activeSetter: ((playing: boolean) => void) | null = null;
+let activeAudio: HTMLAudioElement | null = null;
+
+/** Stops whichever of the two players is currently running. */
+function stopAll() {
+  stopSpeaking();
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio.currentTime = 0;
+    activeAudio = null;
+  }
+}
 
 export function SectionAudio({ topic, lang }: { topic: string; lang: Language }) {
   const [playing, setPlaying] = useState(false);
-  const [unavailable, setUnavailable] = useState(false);
-  const voicesReady = useVoicesReady();
+  const [failed, setFailed] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  useVoicesReady();
   const ta = lang === "ta";
 
-  useEffect(() => () => {
-    if (playing) stopSpeaking();
-  }, [playing]);
+  useEffect(
+    () => () => {
+      if (activeSetter === setPlaying) stopAll();
+    },
+    []
+  );
+
+  const finish = useCallback(() => {
+    setPlaying(false);
+    activeSetter = null;
+    activeAudio = null;
+  }, []);
 
   const toggle = useCallback(() => {
     if (playing) {
-      stopSpeaking();
-      setPlaying(false);
-      activeSetter = null;
+      stopAll();
+      finish();
       return;
     }
-    if (!canSpeak(lang)) {
-      setUnavailable(true);
-      window.setTimeout(() => setUnavailable(false), 6000);
-      return;
-    }
-    // Only one section should be speaking at a time.
+
+    // Only one section speaks at a time.
     activeSetter?.(false);
+    stopAll();
     activeSetter = setPlaying;
     setPlaying(true);
-    speak(audioScripts[topic]?.[lang] ?? "", lang, () => {
-      setPlaying(false);
-      activeSetter = null;
-    });
-  }, [playing, lang, topic]);
+    setFailed(false);
 
-  if (!voicesReady && typeof window !== "undefined" && !window.speechSynthesis) return null;
+    // A voice installed on the device sounds far better than the recording,
+    // so use it when there is one for this language. Most phones have an
+    // English voice; a Tamil voice is much rarer, which is why every section
+    // also ships as an audio file.
+    if (canSpeak(lang)) {
+      speak(audioScripts[topic]?.[lang] ?? "", lang, finish);
+      return;
+    }
+
+    const el = audioRef.current;
+    if (!el) {
+      setFailed(true);
+      finish();
+      return;
+    }
+    el.currentTime = 0;
+    activeAudio = el;
+    el.play().catch(() => {
+      setFailed(true);
+      finish();
+    });
+  }, [playing, lang, topic, finish]);
 
   return (
     <span className="listen-wrap">
@@ -183,11 +221,23 @@ export function SectionAudio({ topic, lang }: { topic: string; lang: Language })
         </span>
         {playing ? (ta ? "நிறுத்து" : "Stop") : ta ? "இதைக் கேளுங்கள்" : "Listen to this"}
       </button>
-      {unavailable && (
+
+      {/* The bundled recording, used when the device has no voice for this
+          language. `preload="none"` keeps it off the initial page load. */}
+      <audio
+        ref={audioRef}
+        src={`/audio/${topic}-${lang}.mp3`}
+        preload="none"
+        onEnded={finish}
+        onError={() => {
+          setFailed(true);
+          finish();
+        }}
+      />
+
+      {failed && (
         <em className="listen-note">
-          {ta
-            ? "இந்தச் சாதனத்தில் தமிழ் குரல் இல்லை. சாதன அமைப்புகளில் தமிழ் குரலைச் சேர்க்கவும்."
-            : "This device has no English voice installed. Add one in your device's speech settings."}
+          {ta ? "ஒலியைத் தொடங்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்." : "Could not start the audio. Please try again."}
         </em>
       )}
     </span>
