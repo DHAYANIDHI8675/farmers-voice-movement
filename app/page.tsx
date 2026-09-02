@@ -47,6 +47,7 @@ const ui = {
     download: "Download",
     open: "Read PDF",
     footer: "Peaceful · Non-partisan · Evidence-led",
+    callUs: "Call us",
   },
   ta: {
     movement: "மாம்பழப் பகுதி இயக்கம்",
@@ -80,8 +81,12 @@ const ui = {
     download: "பதிவிறக்க",
     open: "ஆவணத்தைப் படிக்க",
     footer: "அமைதி · கட்சி சார்பற்றது · ஆதார வழி",
+    callUs: "எங்களை அழைக்கவும்",
   },
 };
+
+const CALL_NUMBER = "+91 9566137117";
+const CALL_HREF = "tel:+919566137117";
 
 const problems: { art: CartoonName; title: Bilingual; body: Bilingual }[] = [
   { art: "priceGap", title: { en: "Price collapse", ta: "விலை வீழ்ச்சி" }, body: { en: "Growers report ₹4–5/kg against a notified intervention price of ₹15.45/kg.", ta: "அறிவிக்கப்பட்ட ₹15.45/கிலோ விலைக்கு எதிராக ₹4–5 மட்டுமே கிடைப்பதாக விவசாயிகள் தெரிவிக்கின்றனர்." } },
@@ -154,6 +159,17 @@ const solutions: { step: string; art: CartoonName; horizon: Bilingual; title: Bi
 
 function Arrow() { return <span aria-hidden="true">↗</span>; }
 
+function PhoneIcon() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path
+        d="M6.6 10.8c1.3 2.6 3.5 4.7 6.1 6.1l2-2c.3-.3.7-.4 1.1-.3 1.2.4 2.5.6 3.8.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1-9.4 0-17-7.6-17-17 0-.6.4-1 1-1h3.8c.6 0 1 .4 1 1 0 1.3.2 2.6.6 3.8.1.4 0 .8-.3 1.1l-2 2z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 function DownloadIcon() {
   return (
     <svg className="dl-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none"
@@ -209,17 +225,22 @@ export default function Home() {
       <ScrollProgress />
 
       <header className="site-header">
-        <a className="brand" href="#home" onClick={closeMenu} aria-label={lang === "ta" ? "விவசாயிகளின் குரல் முகப்பு" : "Farmers' Voice home"}>
-          <img src="/assets/farmers-voice-logo.png" alt={lang === "ta" ? "விவசாயிகளின் குரல் இயக்கப் படம்" : "Farmers' Voice campaign image"} />
-          <span><strong>{lang === "ta" ? "விவசாயிகளின் குரல்" : "Farmers' Voice"}</strong><small>{t.movement}</small></span>
-        </a>
-        <nav className={menuOpen ? "open" : ""} aria-label={lang === "ta" ? "முதன்மை வழிசெலுத்தல்" : "Main navigation"}>
-          {["home", "crisis", "season", "demands", "compare", "act", "evidence", "solutions", "myths", "faq", "spread"].map((id, index) => <a key={id} href={`#${id}`} onClick={closeMenu}>{t.nav[index]}</a>)}
-        </nav>
-        <div className="header-actions">
-          <button className="language" onClick={() => setLang(lang === "en" ? "ta" : "en")} aria-label={lang === "en" ? "தமிழுக்கு மாற்றுக" : "ஆங்கிலத்திற்கு மாற்றுக"}>{lang === "en" ? "தமிழ்" : "ஆங்கிலம்"}</button>
-          <button className="share-small" onClick={shareMovement}>{shared ? t.copied : t.share} <Arrow /></button>
-          <button className="menu-button" aria-label={lang === "ta" ? "பட்டியலைத் திறக்க" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span></span><span></span></button>
+        <div className="site-header-inner">
+          <a className="brand" href="#home" onClick={closeMenu} aria-label={lang === "ta" ? "விவசாயிகளின் குரல் முகப்பு" : "Farmers' Voice home"}>
+            <img src="/assets/farmers-voice-logo.png" alt={lang === "ta" ? "விவசாயிகளின் குரல் இயக்கப் படம்" : "Farmers' Voice campaign image"} />
+            <span><strong>{lang === "ta" ? "விவசாயிகளின் குரல்" : "Farmers' Voice"}</strong><small>{t.movement}</small></span>
+          </a>
+          <nav className={menuOpen ? "open" : ""} aria-label={lang === "ta" ? "முதன்மை வழிசெலுத்தல்" : "Main navigation"}>
+            {["home", "crisis", "season", "demands", "compare", "act", "evidence", "solutions", "myths", "faq", "spread"].map((id, index) => <a key={id} href={`#${id}`} onClick={closeMenu}>{t.nav[index]}</a>)}
+          </nav>
+          <div className="header-actions">
+            <a className="call-link" href={CALL_HREF} aria-label={`${t.callUs} ${CALL_NUMBER}`}>
+              <PhoneIcon /> <span>{CALL_NUMBER}</span>
+            </a>
+            <button className="language" onClick={() => setLang(lang === "en" ? "ta" : "en")} aria-label={lang === "en" ? "தமிழுக்கு மாற்றுக" : "ஆங்கிலத்திற்கு மாற்றுக"}>{lang === "en" ? "தமிழ்" : "ஆங்கிலம்"}</button>
+            <button className="share-small" onClick={shareMovement}>{shared ? t.copied : t.share} <Arrow /></button>
+            <button className="menu-button" aria-label={lang === "ta" ? "பட்டியலைத் திறக்க" : "Open menu"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}><span></span><span></span></button>
+          </div>
         </div>
       </header>
 
@@ -235,6 +256,10 @@ export default function Home() {
             <p className="source-note">● {t.sourced}</p>
           </div>
           <div className="hero-side">
+            <a className="hero-call" href={CALL_HREF} aria-label={`${t.callUs} ${CALL_NUMBER}`}>
+              <span className="hero-call-icon"><PhoneIcon /></span>
+              <span className="hero-call-text"><small>{t.callUs}</small><strong>{CALL_NUMBER}</strong></span>
+            </a>
             <div className="hero-emblem">
             <span className="hero-ring ring-one"></span><span className="hero-ring ring-two"></span>
             <button
